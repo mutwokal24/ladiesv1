@@ -1,0 +1,100 @@
+generator client {
+  provider = "prisma-client-js"
+}
+datasource db {
+  provider = "sqlite"
+  url = "file:./dev.db"
+}
+
+model User {
+  id            String   @id @default(cuid())
+  email         String   @unique
+  name          String?
+  image         String?
+  hashedPassword String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  listings      Listing[]
+  messages      Message[] @relation("UserMessages")
+  favorites     Favorite[]
+  role          Role      @default(USER)
+}
+
+model Category {
+  id        String    @id @default(cuid())
+  slug      String    @unique
+  name      String
+  parentId  String?
+  parent    Category? @relation("CategoryToCategory", fields: [parentId], references: [id])
+  children  Category[] @relation("CategoryToCategory")
+  listings  Listing[]
+}
+
+model Listing {
+  id          String   @id @default(cuid())
+  title       String
+  description String
+  price       Decimal  @db.Numeric(12,2)
+  currency    String   @default("CAD")
+  condition   String   @default("Used")
+  city        String?
+  region      String?
+  country     String?  @default("CA")
+  lat         Float?
+  lng         Float?
+  images      Json     @default("[]")
+  views       Int      @default(0)
+  status      ListingStatus @default(ACTIVE)
+  ownerId     String
+  owner       User     @relation(fields: [ownerId], references: [id])
+  categoryId  String?
+  category    Category? @relation(fields: [categoryId], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  favorites   Favorite[]
+  messages    Message[]
+}
+
+model Message {
+  id        String   @id @default(cuid())
+  listingId String
+  listing   Listing  @relation(fields: [listingId], references: [id])
+  fromId    String
+  toId      String
+  from      User     @relation("UserMessages", fields: [fromId], references: [id])
+  to        User     @relation("UserMessages", fields: [toId], references: [id])
+  content   String
+  createdAt DateTime @default(now())
+}
+
+model Favorite {
+  id        String   @id @default(cuid())
+  userId    String
+  listingId String
+  user      User     @relation(fields: [userId], references: [id])
+  listing   Listing  @relation(fields: [listingId], references: [id])
+  createdAt DateTime @default(now())
+  @@unique([userId, listingId])
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  actorId   String?
+  action    String
+  entity    String
+  entityId  String?
+  data      Json?
+  createdAt DateTime @default(now())
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum ListingStatus {
+  ACTIVE
+  SOLD
+  ARCHIVED
+  PENDING
+}

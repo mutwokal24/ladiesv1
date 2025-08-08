@@ -1,0 +1,36 @@
+{
+  "name": "ladies-list-classifieds",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.14.0",
+    "autoprefixer": "^10.4.17",
+    "bcryptjs": "^2.4.3",
+    "lucide-react": "^0.452.0",
+    "next": "14.2.3",
+    "next-auth": "^5.0.0-beta.19",
+    "postcss": "^8.4.33",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "socket.io": "^4.7.5",
+    "socket.io-client": "^4.7.5",
+    "stripe": "^14.0.0",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/bcryptjs": "^2.4.2",
+    "@types/node": "20.11.30",
+    "@types/react": "18.2.45",
+    "@types/react-dom": "18.2.18",
+    "prisma": "^5.14.0",
+    "tailwindcss": "^3.4.3",
+    "typescript": "5.4.2"
+  }
+}
